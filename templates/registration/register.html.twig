@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+{{ parent() }}
+{% endblock %}
+
+{% block child %}
+    <section class="registration-page">
+    <h1>Register</h1>
+
+    {{ form_start(registrationForm,{'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_widget(registrationForm.username,{'attr':{'class':'form-control'}}) }}
+        {{ form_errors(registrationForm.username,{'attr':{'class':'alert-color'}}) }}
+        {{ form_row(registrationForm.email) }}
+         {{ form_row(registrationForm.roles) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn btn-lg btn-primary">Register</button>
+    {{ form_end(registrationForm) }}
+    </section>
+{% endblock %}
