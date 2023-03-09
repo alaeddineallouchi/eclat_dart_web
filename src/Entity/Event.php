@@ -8,28 +8,47 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    /**
+     * @Assert\NotBlank()
+     */
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    /**
+     *  @ORM\Column(type="datetime")
+     * @Assert\GreaterThan("today", message="La date de début de l'événement doit être après aujourd'hui.")
+     */
     private ?\DateTimeInterface $datedebut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    /**
+     * @ORM\Column(type="datetime")
+     * @Assert\GreaterThan(propertyPath="datedebut", message="La date de fin doit être après la date de début")
+     */
     private ?\DateTimeInterface $datefin = null;
 
     #[ORM\Column(length: 255)]
+    /**
+     * @Assert\NotBlank()
+     */
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'comments', targetEntity: Comment::class)]
     private Collection $comments;
+
 
     public function __construct()
     {
@@ -46,7 +65,7 @@ class Event
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(string $description=null): self
     {
         $this->description = $description;
 
@@ -82,7 +101,7 @@ class Event
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title=null): self
     {
         $this->title = $title;
 
@@ -121,4 +140,6 @@ class Event
     public function __toString() {
         return(string) $this->id;
     }
+
+
 }

@@ -2,10 +2,14 @@
 
 {% block title %}New Comment{% endblock %}
 
-{% block body %}
-    <h1>Create new Comment</h1>
+{% block child %}
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#" style="color: #2c4d43";>New comment</a>
+    </nav>
+<div style="margin-left: 30px; margin-right: 50px;">
 
-    {{ include('comment/_form.html.twig') }}
+{{ include('comment/_form.html.twig') }}
 
-    <a href="{{ path('app_comment_index') }}">back to list</a>
+    <button class="btn btn-light" onclick="window.location.href='{{ path('app_event_index') }}'">Back to list</button>
+</div>
 {% endblock %}

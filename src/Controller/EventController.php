@@ -3,21 +3,50 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\User;
 use App\Form\EventType;
 use App\Repository\EventRepository;
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Bridge\Google\Transport\GmailSmtpTransport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 #[Route('/event')]
 class EventController extends AbstractController
 {
+    #[Route('/pdfevent', name: 'app_eventPDF', methods: ['GET'])]
+    public function pdf(EventRepository $eventRepository,ManagerRegistry $managerRegistry) : Response
+    {
+
+        $html = $this->renderView('event/eventPDF.html.twig', [
+            'events' =>$managerRegistry->getManager()->getRepository(Event::class)->findAll(),
+        ]);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $response = new Response($dompdf->output());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment;filename=listEvent.pdf ');
+
+        return $response;
+
+    }
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
     public function index(EventRepository $eventRepository): Response
     {
         return $this->render('event/index.html.twig', [
-            'events' => $eventRepository->findAll(),
+            'events' => $eventRepository->findBy([], ['datedebut' => 'DESC']),
         ]);
     }
 
@@ -29,10 +58,14 @@ class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $eventRepository->save($event, true);
+            $this->sendEmail();
 
             return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
         }
+
+
 
         return $this->renderForm('event/new.html.twig', [
             'event' => $event,
@@ -75,4 +108,16 @@ class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+public function sendEmail(){
+        $email=(new Email())
+            ->from('adelseddikii1@gmail.com')
+            ->to('frayhamza@gmail.com')
+            ->subject('Event')
+            ->text('A new event has been created, you should check it');
+            $transport= new GmailSmtpTransport('adelseddikii1@gmail.com','rjdtczuvftkolcxb');
+            $mailer=new Mailer($transport);
+            $mailer->send($email);
+}
 }

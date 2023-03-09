@@ -2,12 +2,24 @@
 
 {% block title %}Edit Comment{% endblock %}
 
-{% block body %}
-    <h1>Edit Comment</h1>
+{% block child %}
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#" style="color: #2c4d43";>New comment</a>
+</nav>
+<div style="margin-left: 20px; margin-right: 20px;">
 
-    {{ include('comment/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_comment_index') }}">back to list</a>
+{{ include('comment/_form.html.twig', {
+    'button_label': 'Update',
+    'attr': {
+        'class': 'btn btn-dark'
+
+    }
+})}}
+
 
     {{ include('comment/_delete_form.html.twig') }}
+    <button onclick="window.location.href='{{ path('app_comment_index') }}'" class="btn btn-light">Back to list</button>
+
+</div>
 {% endblock %}

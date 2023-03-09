@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -29,6 +40,7 @@
               <li><a href="{{path("app_home") }}#aboutus">A propos</a></li>
                <li><a href="{{path("app_home") }}#getin">Contact</a></li>
                 <li><a href={{ path("faq_") }}>FAQ</a></li>
+                <li><a href={{path("app_event_index") }}>Evennements</a></li>
   <li>
   <a href="http://www.facebook.com" target="_blank">
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">

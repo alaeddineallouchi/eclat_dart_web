@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Events List</title>
+</head>
+<body>
+
+<table id="myTable2" class="table">
+    <thead>
+    <tr>
+
+        <th  >Title  </th>
+        <th >Description  </th>
+        <th >Date debut  </th>
+        <th>Date fin</th>
+
+
+
+    </tr>
+    </thead>
+
+    <tbody id="myTable" >
+    {% for event in events %}
+    <tr>
+
+        <td>{{ event.title }}</td>
+        <td>{{ event.description }}</td>
+        <td> {{ event.datedebut ? event.datedebut|date('Y-m-d') : '' }}</td>
+        <td>{{ event.datefin ? event.datefin|date('Y-m-d') : '' }}</td>
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+
+</body>
+</html>

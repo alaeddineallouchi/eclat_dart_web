@@ -5,10 +5,14 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Event;
+use App\Form\EventType;
+use App\Repository\EventRepository;
 
 #[Route('/comment')]
 class CommentController extends AbstractController
@@ -21,7 +25,7 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
+   /** #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
@@ -32,6 +36,26 @@ class CommentController extends AbstractController
             $commentRepository->save($comment, true);
 
             return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('comment/new.html.twig', [
+            'comment' => $comment,
+            'form' => $form,
+        ]);
+    }**/
+    #[Route('/new/{id}', name: 'app_comment_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, CommentRepository $commentRepository,EventRepository $eventRepository,$id): Response
+    {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $event = $eventRepository->find($id);
+            $event->addComment($comment);
+            $commentRepository->save($comment, true);
+
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('comment/new.html.twig', [
