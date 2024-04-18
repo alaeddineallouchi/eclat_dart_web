@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230309224248 extends AbstractMigration
+final class Version20230310082007 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,7 @@ final class Version20230309224248 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526C63379586 FOREIGN KEY (comments_id) REFERENCES event (id)');
-        $this->addSql('ALTER TABLE event ADD photo VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE event CHANGE photo photo VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE user CHANGE roles roles LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\'');
     }
 
@@ -29,7 +29,7 @@ final class Version20230309224248 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526C63379586');
-        $this->addSql('ALTER TABLE event DROP photo');
+        $this->addSql('ALTER TABLE event CHANGE photo photo VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE user CHANGE roles roles LONGTEXT NOT NULL COLLATE `utf8mb4_bin`');
     }
 }
